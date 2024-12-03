@@ -23,15 +23,19 @@ struct Node
 template<typename T>
 class BinaryTree
 {
+public:
     Node<T>* root = nullptr;
 public:
     BinaryTree();
     BinaryTree(string str); // (x (y z))
     ~BinaryTree();
 
+    Node<T>* getRoot();
     void insertNode(T key);
     void traverse(); // level order traverse
+    void preOrderTraverse();
     void deleteTree(Node<T>* node);
+    void printTree(Node<T>* node, int level = 0, bool isRight = false);
 
 };
 
@@ -44,8 +48,14 @@ BinaryTree<T>::BinaryTree()
 template<typename T>
 BinaryTree<T>::BinaryTree(string str)
 {
+    // Check for empty input
+    if (str.empty()) {
+        throw std::invalid_argument("Input string is empty");
+    }
+
     vector<string> tokens;
     string current;
+    int openParentheses = 0;
 
     for (char ch : str)
     {
@@ -60,21 +70,39 @@ BinaryTree<T>::BinaryTree(string str)
                 tokens.push_back(current);
                 current.clear();
             }
-            if (ch == '(' || ch == ')')
+            if (ch == '(')
             {
-                tokens.push_back(std::string(1, ch)); // Добавляем скобку в результат
+                tokens.push_back("(");
+                openParentheses++;
+            }
+            else if (ch == ')')
+            {
+                tokens.push_back(")");
+                if (openParentheses == 0) {
+                    throw std::invalid_argument("Unmatched closing parenthesis found");
+                }
+                openParentheses--;
+            }
+            else if (!isspace(ch)) // Ignore whitespace
+            {
+                throw std::invalid_argument("Invalid character found in input");
             }
         }
     }
-
+    // Add the last number if exists
     if (!current.empty())
     {
         tokens.push_back(current);
     }
+    // Final check for unmatched parentheses
+    if (openParentheses != 0) {
+        throw std::invalid_argument("Unmatched opening parenthesis found");
+    }
+
 
     stack<Node<T>*> stack;
 
-    for (string token : tokens)
+    for (const string& token : tokens)
     {
         if (token == ")")
         {
@@ -82,11 +110,19 @@ BinaryTree<T>::BinaryTree(string str)
             {
                 stack.pop();
             }
+            else
+            {
+                throw std::invalid_argument("Unmatched closing parenthesis found");
+            }
         }
-        else if (token != "(")
+        else if (token == "(")
+        {
+            // Do nothing; just a marker for the start of a subtree
+        }
+        else
         {
             int value = stoi(token);
-            Node<int>* node = new Node<int>(value);
+            Node<T>* node = new Node<T>(value);
 
             if (!this->root)
             {
@@ -94,7 +130,7 @@ BinaryTree<T>::BinaryTree(string str)
             }
             else if (!stack.empty())
             {
-                Node<int>* parent = stack.top();
+                Node<T>* parent = stack.top();
                 if (!parent->left)
                 {
                     parent->left = node;
@@ -107,7 +143,14 @@ BinaryTree<T>::BinaryTree(string str)
             stack.push(node);
         }
     }
+
+    // Final check to ensure the stack is empty
+    if (!stack.empty())
+    {
+         throw std::invalid_argument("Stack isn't empty at the end, indicating an incomplete tree structure");
+    }
 }
+
 
 template<typename T>
 BinaryTree<T>::~BinaryTree()
@@ -179,8 +222,44 @@ void BinaryTree<T>::deleteTree(Node<T>* node)
     deleteTree(node->left);
     deleteTree(node->right);
 
-    cout << "Deleting node with value: " << node->key << std::endl;
+    // cout << "Deleting node with value: " << node->key << std::endl;
     delete node;
+}
+
+template<typename T>
+void BinaryTree<T>::printTree(Node<T>* tree, int level, bool isRight)
+{
+  if (tree == NULL) return;
+  printTree(tree->right, level + 1, true);
+
+  if (!level) cout << "-->";
+  else cout << "   ";
+
+  for (int i = 0; i < level; i++)
+  {
+    if (i + 1 == level) isRight ? cout << ".-->" : cout << "`-->";
+    else cout << "    ";
+  }
+
+  cout << tree->key << "\n";
+
+  printTree(tree->left, level + 1);
+}
+
+template<typename T>
+Node<T>* BinaryTree<T>::getRoot()
+{
+    return this->root;
+}
+
+template<typename T>
+void BinaryTree<T>::preOrderTraverse()
+{
+    if (root == nullptr) return;
+
+    cout << root->data << " ";
+    preOrder(root->left);
+    preOrder(root->right);
 }
 
 #endif // BINARYTREE_H
