@@ -73,13 +73,13 @@ void AVLTree<T>::inOrderInsert(Node<T>* node)
 {
     if (node == nullptr) return;
 
-    // Recursively insert left subtree
+    // recursively insert left subtree
     inOrderInsert(node->left);
 
-    // Insert current node into AVL tree
+    // insert current node into AVL tree
     insertNode(root, node->key);
 
-    // Recursively insert right subtree
+    // recursively insert right subtree
     inOrderInsert(node->right);
 }
 
@@ -117,19 +117,19 @@ void AVLTree<T>::inOrderTraverse()
 
     while (current != nullptr || !stack.empty())
     {
-        // Перемещаемся до самого левого узла
+        // Go to the leftest node
         while (current != nullptr)
         {
             stack.push(current);
             current = current->left;
         }
 
-        // Обрабатываем узел
+        // visit node
         current = stack.top();
         stack.pop();
         cout << current->key << " ";
 
-        // Переходим к правому поддереву
+        // go to the right subtree
         current = current->right;
     }
     cout << endl;
@@ -150,7 +150,7 @@ void AVLTree<T>::preOrderTraverse()
         stack.pop();
         cout << node->key << " ";
 
-        // Сначала добавляем правого потомка, чтобы левый потомок был обработан первым
+        // firstly add right child to visit left child firstly
         if (node->right) stack.push(node->right);
         if (node->left) stack.push(node->left);
     }
@@ -163,21 +163,21 @@ void AVLTree<T>::postOrderTraverse()
     if (this->root == nullptr) return;
 
     stack<AVLNode<T>*> stack;
-    std::stack<int> output; // Для хранения результата
+    std::stack<int> output; // result
     stack.push(this->root);
 
     while (!stack.empty())
     {
         AVLNode<T>* node = stack.top();
         stack.pop();
-        output.push(node->key); // Сохраняем узел в выходной стек
+        output.push(node->key); // put node to the stack
 
-        // Сначала добавляем левого потомка, затем правого, чтобы правый обрабатывался первым
+        // firsly add left child, then right to visit right child firstly
         if (node->left) stack.push(node->left);
         if (node->right) stack.push(node->right);
     }
 
-    // Выводим результат в обратном порядке
+    // output result in reversed order
     while (!output.empty())
     {
         cout << output.top() << " ";
@@ -264,15 +264,15 @@ AVLNode<T>* AVLTree<T>::rightRotate(AVLNode<T>* y)
     AVLNode<T>* x = y->left;
     AVLNode<T>* T2 = x->right;
 
-    // Perform rotation
+    // perform rotation
     x->right = y;
     y->left = T2;
 
-    // Update heights
+    // update heights
     y->height = max(getHeight(y->left), getHeight(y->right)) + 1;
     x->height = max(getHeight(x->left), getHeight(x->right)) + 1;
 
-    return x; // Return new root
+    return x; // return new root
 }
 
 template <typename T>
@@ -281,21 +281,21 @@ AVLNode<T>* AVLTree<T>::leftRotate(AVLNode<T>* x)
     AVLNode<T>* y = x->right;
     AVLNode<T>* T2 = y->left;
 
-    // Perform rotation
+    // perform rotation
     y->left = x;
     x->right = T2;
 
-    // Update heights
+    // update heights
     x->height = max(getHeight(x->left), getHeight(x->right)) + 1;
     y->height = max(getHeight(y->left), getHeight(y->right)) + 1;
 
-    return y; // Return new root
+    return y; // return new root
 }
 
 template <typename T>
 void AVLTree<T>::insertNode(AVLNode<T>*& node, int key)
 {
-    // Perform the normal BST insertion
+    // normal binary search tree insertion
     if (!node)
     {
         node = new AVLNode<T>(key);
@@ -306,33 +306,33 @@ void AVLTree<T>::insertNode(AVLNode<T>*& node, int key)
         insertNode(node->left, key);
     else if (key > node->key)
         insertNode(node->right, key);
-    else // Duplicate keys are not allowed in the AVL tree
+    else // duplicate keys are not allowed in the AVL tree
         return;
 
-    // Update height of this ancestor node
+    // update height of this child node
     node->height = 1 + max(getHeight(node->left), getHeight(node->right));
 
-    // Get the balance factor of this ancestor node to check whether this node became unbalanced
+    // get the balance value of this child node to check whether this node became unbalanced
     int balance = getBalanceValue(node);
 
-    // If this node becomes unbalanced, then there are 4 cases
+    // if this node becomes unbalanced, then there are 4 cases
 
     // left subtree of left child
     if (balance > 1 && key < node->left->key)
         node = rightRotate(node);
 
-    // Right subtree of right child
+    // right subtree of right child
     else if (balance < -1 && key > node->right->key)
         node = leftRotate(node);
 
-    // Right subtree of Left child
+    // right subtree of Left child
     else if (balance > 1 && key > node->left->key)
     {
         node->left = leftRotate(node->left);
         node = rightRotate(node);
     }
 
-    // Left subtree of right child
+    // left subtree of right child
     else if (balance < -1 && key < node->right->key)
     {
         node->right = rightRotate(node->right);
@@ -345,16 +345,16 @@ AVLNode<T>* AVLTree<T>::minValueNode(AVLNode<T>* node)
 {
     AVLNode<T>* curr = node;
 
-       while (curr && curr->left != nullptr)
-           curr = curr->left;
+   while (curr && curr->left != nullptr)
+       curr = curr->left;
 
-       return curr;
+   return curr;
 }
 
 template <typename T>
 void AVLTree<T>::deleteNode(AVLNode<T>*& root, T key)
 {
-    // STEP 1: PERFORM STANDARD BST DELETE
+    // step 1: standard binary search tree deletion
     if (root == nullptr) return;
 
     if (key < root->key)
@@ -365,64 +365,64 @@ void AVLTree<T>::deleteNode(AVLNode<T>*& root, T key)
 
     else
     {
-        // Node with only one child or no child
+        // node with only one child or no child
         if ((root->left == nullptr) || (root->right == nullptr))
         {
             AVLNode<T> *temp = root->left ? root->left : root->right;
 
-            // No child case
+            // no child case
             if (temp == nullptr)
             {
                 temp = root;
                 root = nullptr;
             }
-            else // One child case
-                *root = *temp; // Copy the contents of the non-empty child
+            else // one child case
+                *root = *temp; // copy the contents of the non-empty child
 
-            delete temp; // Use delete instead of free for C++
+            delete temp; // clear memory
         }
         else
         {
-            // Node with two children: Get the inorder successor (smallest in the right subtree)
+            // node with two children: Get the inorder successor (smallest in the right subtree)
             AVLNode<T>* temp = minValueNode(root->right);
 
-            // Copy the inorder successor's data to this node
+            // copy the inorder successor's data to this node
             root->key = temp->key;
 
-            // Delete the inorder successor
+            // delete the inorder successor
             deleteNode(root->right, temp->key);
         }
     }
 
-    // If the tree had only one node then return
+    // if the tree had only one node then return
     if (root == nullptr) return;
 
-    // STEP 2: UPDATE HEIGHT OF THIS ANCESTOR NODE
+    // step 2: update height of this child node
     root->height = max(getHeight(root->left), getHeight(root->right)) + 1;
 
 
-    // STEP 3: GET THE BALANCE FACTOR OF THIS ANCESTOR NODE TO CHECK WHETHER
-    // THIS NODE BECAME UNBALANCED
+    // step 3: get the balance value of this child node to check where
+    // this node became unbalanced
     int balance = getBalanceValue(root);
 
-    // If this node becomes unbalanced, then there are 4 cases
+    // if this node becomes unbalanced, then there are 4 cases
 
-    // Left Left Case
+    // left left case
     if (balance > 1 && getBalanceValue(root->left) >= 0)
         root = rightRotate(root);
 
-    // Left Right Case
+    // left right case
     else if (balance > 1 && getBalanceValue(root->left) < 0)
     {
         root->left = leftRotate(root->left);
         root = rightRotate(root);
     }
 
-    // Right Right Case
+    // right right case
     else if (balance < -1 && getBalanceValue(root->right) <= 0)
         root = leftRotate(root);
 
-    // Right Left Case
+    // right left case
     else if (balance < -1 && getBalanceValue(root->right) > 0)
     {
         root->right = rightRotate(root->right);

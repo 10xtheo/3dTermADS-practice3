@@ -83,18 +83,18 @@ BinaryTree<T>::BinaryTree(string str)
                 }
                 openParentheses--;
             }
-            else if (!isspace(ch)) // Ignore whitespace
+            else if (!isspace(ch)) // ignore whitespace
             {
                 throw std::invalid_argument("Invalid character found in input");
             }
         }
     }
-    // Add the last number if exists
+    // add the last number if exists
     if (!current.empty())
     {
         tokens.push_back(current);
     }
-    // Final check for unmatched parentheses
+    // final check for unmatched parentheses
     if (openParentheses != 0) {
         throw std::invalid_argument("Unmatched opening parenthesis found");
     }
@@ -117,7 +117,7 @@ BinaryTree<T>::BinaryTree(string str)
         }
         else if (token == "(")
         {
-            // Do nothing; just a marker for the start of a subtree
+            // do nothing - just a marker for the start of a subtree
         }
         else
         {
@@ -144,7 +144,7 @@ BinaryTree<T>::BinaryTree(string str)
         }
     }
 
-    // Final check to ensure the stack is empty
+    // final check to ensure the stack is empty
     if (!stack.empty())
     {
          throw std::invalid_argument("Stack isn't empty at the end, indicating an incomplete tree structure");
@@ -222,7 +222,7 @@ void BinaryTree<T>::deleteTree(Node<T>* node)
     deleteTree(node->left);
     deleteTree(node->right);
 
-    // cout << "Deleting node with value: " << node->key << endl;
+    // cout << "deleting node with value: " << node->key << endl;
     delete node;
 }
 
