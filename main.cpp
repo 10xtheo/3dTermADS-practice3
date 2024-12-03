@@ -37,7 +37,7 @@ int main()
     {
         seq += line;
     }
-    inFile.close(); // Close the file
+    inFile.close();
 
 
 
@@ -55,6 +55,8 @@ int main()
     avl.inOrderTraverse();
     cout << "post order: ";
     avl.postOrderTraverse();
+    cout << "on level order: ";
+    avl.traverse();
     cout << endl;
 
     while (true)
@@ -116,7 +118,6 @@ int main()
                 break;
             }
         }
-
     }
     return 0;
 }

@@ -24,10 +24,6 @@ struct AVLNode
         this->key = value;
     }
 
-//    ~AVLNode()
-//    {
-//        delete this;
-//    }
 };
 
 template<typename T>
@@ -62,9 +58,7 @@ public:
     void insertNode(AVLNode<T>*& node, int key); // done
 
     AVLNode<T>* minValueNode(AVLNode<T>* node); // done
-    void deleteNode(AVLNode<T>*& root, T key); // TODO: do
-
-private:
+    void deleteNode(AVLNode<T>*& root, T key); // done
 
 };
 
@@ -208,6 +202,7 @@ void AVLTree<T>::traverse()
         if (curr->left) q.push(curr->left);
         if (curr->right) q.push(curr->right);
     }
+    cout << endl;
 }
 
 template<typename T>
@@ -221,7 +216,7 @@ void AVLTree<T>::deleteTree(AVLNode<T>* node)
     deleteTree(node->left);
     deleteTree(node->right);
 
-    // cout << "Deleting node with value: " << node->key << std::endl;
+    // cout << "Deleting node with value: " << node->key << endl;
     delete node;
 }
 
@@ -274,8 +269,8 @@ AVLNode<T>* AVLTree<T>::rightRotate(AVLNode<T>* y)
     y->left = T2;
 
     // Update heights
-    y->height = std::max(getHeight(y->left), getHeight(y->right)) + 1;
-    x->height = std::max(getHeight(x->left), getHeight(x->right)) + 1;
+    y->height = max(getHeight(y->left), getHeight(y->right)) + 1;
+    x->height = max(getHeight(x->left), getHeight(x->right)) + 1;
 
     return x; // Return new root
 }
@@ -291,8 +286,8 @@ AVLNode<T>* AVLTree<T>::leftRotate(AVLNode<T>* x)
     x->right = T2;
 
     // Update heights
-    x->height = std::max(getHeight(x->left), getHeight(x->right)) + 1;
-    y->height = std::max(getHeight(y->left), getHeight(y->right)) + 1;
+    x->height = max(getHeight(x->left), getHeight(x->right)) + 1;
+    y->height = max(getHeight(y->left), getHeight(y->right)) + 1;
 
     return y; // Return new root
 }
@@ -403,7 +398,7 @@ void AVLTree<T>::deleteNode(AVLNode<T>*& root, T key)
     if (root == nullptr) return;
 
     // STEP 2: UPDATE HEIGHT OF THIS ANCESTOR NODE
-    root->height = std::max(getHeight(root->left), getHeight(root->right)) + 1;
+    root->height = max(getHeight(root->left), getHeight(root->right)) + 1;
 
 
     // STEP 3: GET THE BALANCE FACTOR OF THIS ANCESTOR NODE TO CHECK WHETHER
@@ -416,18 +411,18 @@ void AVLTree<T>::deleteNode(AVLNode<T>*& root, T key)
     if (balance > 1 && getBalanceValue(root->left) >= 0)
         root = rightRotate(root);
 
-    // Left Right Case (right subtree (x) )
+    // Left Right Case
     else if (balance > 1 && getBalanceValue(root->left) < 0)
     {
         root->left = leftRotate(root->left);
         root = rightRotate(root);
     }
 
-    // Right Right Case (left subtree (x) )
+    // Right Right Case
     else if (balance < -1 && getBalanceValue(root->right) <= 0)
         root = leftRotate(root);
 
-    // Right Left Case (left subtree (x) )
+    // Right Left Case
     else if (balance < -1 && getBalanceValue(root->right) > 0)
     {
         root->right = rightRotate(root->right);

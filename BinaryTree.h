@@ -222,7 +222,7 @@ void BinaryTree<T>::deleteTree(Node<T>* node)
     deleteTree(node->left);
     deleteTree(node->right);
 
-    // cout << "Deleting node with value: " << node->key << std::endl;
+    // cout << "Deleting node with value: " << node->key << endl;
     delete node;
 }
 
