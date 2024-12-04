@@ -21,7 +21,7 @@ int getInt()
 
 int main()
 {
-    string filePath = "/home/theo/projects/allgorithms2024/3dTermADS-practice3/file.txt";
+    string filePath = "/home/theo/projects/allgorithms2024/3dTermADS-practice3/src/file.txt";
     ifstream inFile(filePath, ios::in);
 
     if (!inFile)
@@ -39,11 +39,17 @@ int main()
     }
     inFile.close();
 
-
-
     BinaryTree<int> bt(seq);
     cout << "simple binary tree:" << endl;
     bt.printTree(bt.root);
+
+    // updated
+
+    cout << "pre order recursion traverse: ";
+    bt.preOrderTraverse(bt.root);
+    cout << endl << endl;
+
+    // updatedr
 
     cout << "avl tree:" << endl;
     AVLTree<int> avl(bt);

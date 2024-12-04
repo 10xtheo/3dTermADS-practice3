@@ -117,7 +117,7 @@ void AVLTree<T>::inOrderTraverse()
 
     while (current != nullptr || !stack.empty())
     {
-        // Go to the leftest node
+        // go to the leftest node
         while (current != nullptr)
         {
             stack.push(current);

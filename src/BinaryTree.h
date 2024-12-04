@@ -33,7 +33,7 @@ public:
     Node<T>* getRoot();
     void insertNode(T key);
     void traverse(); // level order traverse
-    void preOrderTraverse();
+    void preOrderTraverse(Node<T>* node);
     void deleteTree(Node<T>* node);
     void printTree(Node<T>* node, int level = 0, bool isRight = false);
 
@@ -253,13 +253,13 @@ Node<T>* BinaryTree<T>::getRoot()
 }
 
 template<typename T>
-void BinaryTree<T>::preOrderTraverse()
+void BinaryTree<T>::preOrderTraverse(Node<T>* node)
 {
-    if (root == nullptr) return;
+    if (node== nullptr) return;
 
-    cout << root->data << " ";
-    preOrder(root->left);
-    preOrder(root->right);
+    cout << node->key << " ";
+    preOrderTraverse(node->left);
+    preOrderTraverse(node->right);
 }
 
 #endif // BINARYTREE_H
